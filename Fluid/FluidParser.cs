@@ -1,4 +1,4 @@
-﻿using Fluid.Ast;
+using Fluid.Ast;
 using Fluid.Ast.BinaryExpressions;
 using Fluid.Parser;
 using Fluid.Values;
@@ -249,6 +249,7 @@ namespace Fluid
 
             var BreakTag = TagEnd.Then<Statement>(x => new BreakStatement()).ElseError("Invalid 'break' tag");
             var ContinueTag = TagEnd.Then<Statement>(x => new ContinueStatement()).ElseError("Invalid 'continue' tag");
+            var InlineCommentTag = AnyCharBefore(TagEnd).AndSkip(TagEnd).Then<Statement>(x => new CommentStatement(x.ToString().Trim()));
             var CommentTag = TagEnd
                         .SkipAnd(AnyCharBefore(CreateTag("endcomment")))
                         .AndSkip(CreateTag("endcomment").ElseError($"'{{% endcomment %}}' was expected"))
@@ -417,6 +418,7 @@ namespace Fluid
 
             RegisteredTags["break"] = BreakTag;
             RegisteredTags["continue"] = ContinueTag;
+            RegisteredTags["#"] = InlineCommentTag;
             RegisteredTags["comment"] = CommentTag;
             RegisteredTags["capture"] = CaptureTag;
             RegisteredTags["cycle"] = CycleTag;

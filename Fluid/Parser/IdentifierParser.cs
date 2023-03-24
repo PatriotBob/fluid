@@ -25,6 +25,9 @@ namespace Fluid.Parser
             else if (char.IsDigit(current))
             {
             }
+            else if (current == '#')
+            {
+            }
             else
             {
                 // Doesn't start with a letter or a digit
@@ -34,6 +37,12 @@ namespace Fluid.Parser
             // Read while it's an identifier part. and ensure we have at least a letter or it's a number
 
             cursor.Advance();
+
+            if (current == '#' && cursor.Current == ' ')
+            {
+                result.Set(start.Offset, cursor.Offset, new TextSpan(context.Scanner.Buffer, start.Offset, cursor.Offset - start.Offset));
+                return true;
+            }
 
             while (!context.Scanner.Cursor.Eof)
             {

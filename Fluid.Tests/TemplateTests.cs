@@ -1171,5 +1171,15 @@ after
             var result = await template.RenderAsync(context);
             Assert.Contains("true", result);
         }
+
+        [Fact]
+        public async Task InlineCommentDoesntBlockCodeWell()
+        {
+            var source = "{%- # {% echo 'Welcome to LiquidJS!' %} -%}";
+            _parser.TryParse(source, out var template);
+            var context = new TemplateContext();
+            var result = await template.RenderAsync(context);
+            Assert.Equal(" -%}", result);
+        }
     }
 }

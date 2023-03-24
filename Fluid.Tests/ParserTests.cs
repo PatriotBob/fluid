@@ -1,4 +1,4 @@
-﻿using Fluid.Ast;
+using Fluid.Ast;
 using Fluid.Parser;
 using Microsoft.Extensions.Primitives;
 using System;
@@ -173,6 +173,16 @@ namespace Fluid.Tests
             Assert.Single(statements);
             Assert.IsType<CommentStatement>(statements.ElementAt(0));
             Assert.Equal(" on {{ this }} and {{{ that }}} ", (statements.ElementAt(0) as CommentStatement).Text.ToString());
+        }
+
+        [Fact]
+        public void ShouldParseInlineComment()
+        {
+            var statements = Parse(@"{% # on this and that %}");
+
+            Assert.Single(statements);
+            Assert.IsType<CommentStatement>(statements.ElementAt(0));
+            Assert.Equal("on this and that", (statements.ElementAt(0) as CommentStatement).Text.ToString());
         }
 
         [Fact]
